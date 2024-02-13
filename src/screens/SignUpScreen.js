@@ -1,85 +1,53 @@
-// import React, { useRef } from "react";
-// import "./SignUpScreen.css";
-// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
-// const SignUpScreen = () => {
-//   const emailRef = useRef(null);
-//   const passwordRef = useRef(null);
-
-//   const register = (e) => {
-//     e.preventDefault();
-
-//     const auth = getAuth(); // Initialize auth
-//     createUserWithEmailAndPassword(
-//       auth,
-//       emailRef.current.value,
-//       passwordRef.current.value
-//     )
-//       .then((authUser) => {
-//         console.log(authUser);
-//       })
-//       .catch((error) => {
-//         alert(error.message);
-//       });
-//   };
-
-//   const signIn = (e) => {
-//     e.preventDefault();
-//     // Add your sign-in logic if needed
-//   };
-
-//   return (
-//     <div className="signupScreen">
-//       <form>
-//         <h1>Sign Up</h1>
-//         <input ref={emailRef} placeholder="Email" type="email" />
-//         <input ref={passwordRef} placeholder="Password" type="password" />
-//         <button type="submit" onClick={register}>
-//           Sign Up
-//         </button>
-//         <h4>
-//           <span className="signupScreen_gray">I have account. </span>
-//           <span className="signupScreen_link" onClick={signIn}>
-//             Sign In Here.
-//           </span>
-//         </h4>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default SignUpScreen;
-
-
-
 import React, { useRef } from "react";
 import "./SignUpScreen.css";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const SignUpScreen = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const navigate = useNavigate();
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
 
-    const auth = getAuth(); // Initialize auth
-    createUserWithEmailAndPassword(
-      auth,
-      emailRef.current.value,
-      passwordRef.current.value
-    )
-      .then((authUser) => {
-        console.log(authUser);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+
+      // Signed in
+      const user = userCredential.user;
+      console.log(user);
+      navigate("/");
+    } catch (error) {
+      const errorMessage = error.message;
+      alert(`${errorMessage}`);
+    }
   };
 
-  const signIn = (e) => {
+  const signIn = async (e) => {
     e.preventDefault();
-    // Add your sign-in logic if needed
+
+    try {
+      const authUser = await signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+
+      console.log(authUser);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(`${errorCode}: ${errorMessage}`);
+    }
   };
 
   return (
@@ -92,7 +60,7 @@ const SignUpScreen = () => {
           Sign Up
         </button>
         <h4>
-          <span className="signupScreen_gray">I have account. </span>
+          <span className="signupScreen_gray">Already have an account? </span>
           <span className="signupScreen_link" onClick={signIn}>
             Sign In Here.
           </span>

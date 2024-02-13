@@ -1,11 +1,10 @@
 import React from "react";
 import Nav from "../Nav";
-// import {withStyles} from "@material-ui/core/styles"
 import Banner from "../Banner";
 import Row from "../Row";
 import requests from "../Requests";
 
-const styles = {};
+
 
 function HomeScreen() {
   return (
@@ -28,4 +27,4 @@ function HomeScreen() {
   );
 }
 export default HomeScreen;
-// export default withStyles(styles)(HomeScreen)
+
