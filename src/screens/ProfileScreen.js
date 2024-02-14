@@ -3,16 +3,23 @@ import "./ProfileScreen.css";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
-import PlanScreen from "../screens/PlanScreen"; 
+import PlanScreen from "../screens/PlanScreen";
 import Nav from "../Nav";
+import { useNavigate } from "react-router-dom";
 
 const ProfileScreen = () => {
-  // Use the useSelector hook to get the user from the Redux store
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
+
+  const handleNavClick = () => {
+    // Redirect to your desired location
+    navigate("/HomeScreen");
+  };
 
   return (
     <div className="profileScreen">
-      <Nav />
+      <Nav onClick={handleNavClick} />
+
       <div className="profileScreen_body">
         <h1>Edit Profile</h1>
         <div className="profileScreen_Info">
